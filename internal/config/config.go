@@ -37,9 +37,14 @@ func (s ServerConfig) Addr() string {
 
 // Load reads configuration from environment variables with sensible defaults.
 func Load() (*Config, error) {
-	port, err := strconv.Atoi(getEnv("SERVER_PORT", "8080"))
+	portValue := os.Getenv("PORT")
+	if portValue == "" {
+		portValue = getEnv("SERVER_PORT", "8080")
+	}
+
+	port, err := strconv.Atoi(portValue)
 	if err != nil {
-		return nil, fmt.Errorf("invalid SERVER_PORT value: %w", err)
+		return nil, fmt.Errorf("invalid server port value: %w", err)
 	}
 
 	return &Config{
