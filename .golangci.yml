@@ -3,6 +3,9 @@ linters-settings:
     local-prefixes: github.com/alvaradoruben/myapp
   govet:
     enable-all: true
+  misspell:
+    ignore-words:
+      - participantes
   revive:
     rules:
       - name: exported

@@ -143,8 +143,8 @@ func TestListPokemon_OK(t *testing.T) {
 		}
 		w.Header().Set("Content-Type", "application/json")
 		_ = json.NewEncoder(w).Encode(map[string]any{
-			"count": 1302,
-			"next": "https://pokeapi.co/api/v2/pokemon?offset=2&limit=2",
+			"count":    1302,
+			"next":     "https://pokeapi.co/api/v2/pokemon?offset=2&limit=2",
 			"previous": nil,
 			"results": []any{
 				map[string]any{"name": "bulbasaur", "url": "https://pokeapi.co/api/v2/pokemon/1/"},

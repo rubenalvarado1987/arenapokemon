@@ -18,8 +18,8 @@ var ErrNotFound = errors.New("pokemon not found")
 
 // Client is an HTTP client for the PokéAPI.
 type Client struct {
-	baseURL    string
 	httpClient *http.Client
+	baseURL    string
 }
 
 // Option is a functional option for configuring a Client.
@@ -126,7 +126,7 @@ func (c *Client) ListPokemon(ctx context.Context, limit, offset int) (*PokemonLi
 		Offset:  offset,
 		Results: items,
 	}, nil
-	}
+}
 
 // mapPokemon converts the raw PokeAPI response into our public model.
 func mapPokemon(r *pokemonResponse) *Pokemon {

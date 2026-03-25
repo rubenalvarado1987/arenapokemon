@@ -3,15 +3,15 @@ package pokeapi
 // --- PokeAPI raw response types ---------------------------------------------
 
 type pokemonResponse struct {
-	ID             int        `json:"id"`
+	Sprites        sprites    `json:"sprites"`
 	Name           string     `json:"name"`
-	BaseExperience int        `json:"base_experience"`
-	Height         int        `json:"height"`
-	Weight         int        `json:"weight"`
 	Abilities      []ability  `json:"abilities"`
 	Stats          []stat     `json:"stats"`
 	Types          []typeSlot `json:"types"`
-	Sprites        sprites    `json:"sprites"`
+	ID             int        `json:"id"`
+	BaseExperience int        `json:"base_experience"`
+	Height         int        `json:"height"`
+	Weight         int        `json:"weight"`
 }
 
 type ability struct {
@@ -23,32 +23,32 @@ type ability struct {
 }
 
 type stat struct {
-	BaseStat int `json:"base_stat"`
-	Effort   int `json:"effort"`
-	Stat     struct {
+	Stat struct {
 		Name string `json:"name"`
 	} `json:"stat"`
+	BaseStat int `json:"base_stat"`
+	Effort   int `json:"effort"`
 }
 
 type typeSlot struct {
-	Slot int `json:"slot"`
 	Type struct {
 		Name string `json:"name"`
 	} `json:"type"`
+	Slot int `json:"slot"`
 }
 
 type sprites struct {
-	FrontDefault     string `json:"front_default"`
-	FrontShiny       string `json:"front_shiny"`
-	BackDefault      string `json:"back_default"`
+	FrontDefault       string `json:"front_default"`
+	FrontShiny         string `json:"front_shiny"`
+	BackDefault        string `json:"back_default"`
 	FrontDefaultFemale string `json:"front_female"`
 }
 
 type pokemonListResponse struct {
-	Count   int                 `json:"count"`
-	Next    string              `json:"next"`
-	Previous string             `json:"previous"`
-	Results []pokemonListResult `json:"results"`
+	Next     string              `json:"next"`
+	Previous string              `json:"previous"`
+	Results  []pokemonListResult `json:"results"`
+	Count    int                 `json:"count"`
 }
 
 type pokemonListResult struct {
@@ -60,15 +60,15 @@ type pokemonListResult struct {
 
 // Pokemon is the response model exposed by our API.
 type Pokemon struct {
-	ID             int       `json:"id"`
+	Sprites        Sprites   `json:"sprites"`
 	Name           string    `json:"name"`
-	BaseExperience int       `json:"base_experience"`
-	Height         int       `json:"height"`       // in decimetres
-	Weight         int       `json:"weight"`       // in hectograms
 	Abilities      []Ability `json:"abilities"`
 	Stats          []Stat    `json:"stats"`
 	Types          []string  `json:"types"`
-	Sprites        Sprites   `json:"sprites"`
+	ID             int       `json:"id"`
+	BaseExperience int       `json:"base_experience"`
+	Height         int       `json:"height"`
+	Weight         int       `json:"weight"`
 }
 
 // Ability represents a Pokémon ability.
@@ -100,8 +100,8 @@ type PokemonListItem struct {
 
 // PokemonList is the paginated response model exposed by our API.
 type PokemonList struct {
+	Results []PokemonListItem `json:"results"`
 	Count   int               `json:"count"`
 	Limit   int               `json:"limit"`
 	Offset  int               `json:"offset"`
-	Results []PokemonListItem `json:"results"`
 }
