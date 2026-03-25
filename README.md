@@ -63,6 +63,23 @@ make run
 
 El servidor arranca en `http://localhost:8080`.
 
+## Deploy en Vercel
+
+El proyecto incluye una entrada serverless para Vercel en `api/index.go` y un `vercel.json` que reescribe todas las rutas hacia esa función.
+
+Puntos clave:
+
+- Localmente puedes seguir usando `make run`.
+- En Vercel no se usa el ciclo de vida de `cmd/api/main.go`; se reutiliza el mismo router mediante una función HTTP.
+- Si defines variables en Vercel, las más útiles son `APP_NAME`, `APP_ENV=production`, `APP_VERSION` y `LOG_LEVEL`.
+
+Pasos:
+
+```bash
+vercel
+vercel --prod
+```
+
 ## Endpoints
 
 | Método | Ruta                     | Descripción                  |
