@@ -26,6 +26,8 @@ const frontendHTML = `<!DOCTYPE html>
       --line: rgba(36, 29, 28, 0.08);
       --shadow: 0 24px 70px rgba(70, 45, 20, 0.14);
       --radius: 26px;
+      --pokeball-red: #EE1515;
+      --anniversary-gold: #d4a017;
     }
 
     * { box-sizing: border-box; }
@@ -36,6 +38,7 @@ const frontendHTML = `<!DOCTYPE html>
       font-family: Georgia, "Times New Roman", serif;
       color: var(--text);
       background:
+        url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='80' height='80'%3E%3Ccircle cx='40' cy='40' r='34' fill='none' stroke='rgba(239,71,111,0.06)' stroke-width='1.5'/%3E%3Crect x='6' y='38' width='68' height='4' fill='rgba(239,71,111,0.04)'/%3E%3Ccircle cx='40' cy='40' r='9' fill='none' stroke='rgba(239,71,111,0.06)' stroke-width='1.5'/%3E%3C/svg%3E") center / 80px 80px,
         radial-gradient(circle at top left, rgba(255, 209, 102, 0.74), transparent 24%),
         radial-gradient(circle at 85%% 10%%, rgba(239, 71, 111, 0.18), transparent 22%),
         linear-gradient(180deg, #fff7ea 0%%, var(--bg) 56%%, #ebe0cf 100%%);
@@ -57,6 +60,20 @@ const frontendHTML = `<!DOCTYPE html>
       box-shadow: var(--shadow);
       overflow: hidden;
       position: relative;
+    }
+
+    .hero::before {
+      content: "";
+      position: absolute;
+      top: -40px;
+      right: -40px;
+      width: 280px;
+      height: 280px;
+      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ccircle cx='50' cy='50' r='48' fill='none' stroke='rgba(239,71,111,0.13)' stroke-width='1.5'/%3E%3Crect x='2' y='47' width='96' height='6' fill='rgba(239,71,111,0.08)'/%3E%3Ccircle cx='50' cy='50' r='12' fill='none' stroke='rgba(239,71,111,0.13)' stroke-width='1.5'/%3E%3Ccircle cx='50' cy='50' r='6' fill='rgba(239,71,111,0.07)'/%3E%3Cpath d='M2 50 C2 24 24 2 50 2 C76 2 98 24 98 50' fill='rgba(239,71,111,0.06)'/%3E%3C/svg%3E");
+      background-size: contain;
+      background-repeat: no-repeat;
+      pointer-events: none;
+      z-index: 0;
     }
 
     .hero::after {
@@ -169,8 +186,10 @@ const frontendHTML = `<!DOCTYPE html>
 
     .battle-stage {
       background:
-        linear-gradient(180deg, rgba(255, 245, 224, 0.9), rgba(255, 255, 255, 0.72)),
-        linear-gradient(120deg, rgba(239, 71, 111, 0.08), rgba(6, 214, 160, 0.08));
+        linear-gradient(180deg, rgba(255, 245, 224, 0.92), rgba(255, 255, 255, 0.75)),
+        radial-gradient(ellipse 90%% 50%% at 50%% 85%%, rgba(239, 71, 111, 0.10), transparent),
+        url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='120' height='60'%3E%3Cellipse cx='60' cy='55' rx='55' ry='20' fill='none' stroke='rgba(239,71,111,0.05)' stroke-width='1'/%3E%3Cellipse cx='60' cy='55' rx='38' ry='13' fill='none' stroke='rgba(239,71,111,0.04)' stroke-width='1'/%3E%3C/svg%3E") center bottom / 340px 170px no-repeat,
+        linear-gradient(120deg, rgba(239, 71, 111, 0.06), rgba(6, 214, 160, 0.06));
       padding: 24px;
       display: grid;
       gap: 20px;
@@ -582,6 +601,7 @@ const frontendHTML = `<!DOCTYPE html>
       .page { width: min(100%% - 20px, 1200px); padding-top: 20px; }
       .hero { padding: 22px; }
       .meta { align-items: flex-start; flex-direction: column; }
+      .deco-row { display: none; }
     }
 
     @media (max-width: 960px) {
@@ -589,22 +609,145 @@ const frontendHTML = `<!DOCTYPE html>
       .fighters { grid-template-columns: 1fr; }
       .versus { order: -1; }
     }
+
+    /* ── Anniversary bar ──────────────────────────────── */
+    .anniv-bar {
+      background: linear-gradient(90deg, #be3455, #ef476f 30%%, #ffd166 50%%, #ef476f 70%%, #be3455);
+      background-size: 200%% 100%%;
+      animation: shimmer 5s ease infinite;
+      color: #fff;
+      text-align: center;
+      padding: 9px 20px;
+      font-size: 0.875rem;
+      font-family: Georgia, serif;
+      letter-spacing: 0.03em;
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      box-shadow: 0 2px 12px rgba(190, 52, 85, 0.35);
+    }
+
+    .anniv-bar-inner {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+      max-width: 1200px;
+      margin: 0 auto;
+      flex-wrap: wrap;
+    }
+
+    .anniv-emoji {
+      font-size: 1rem;
+      animation: float 2.4s ease-in-out infinite;
+    }
+
+    /* ── Decorative Pokémon row ───────────────────────── */
+    .deco-row {
+      display: flex;
+      gap: 10px;
+      align-items: center;
+      flex-wrap: wrap;
+      margin-top: 16px;
+      position: relative;
+      z-index: 1;
+    }
+
+    .deco-sprite {
+      width: 60px;
+      height: 60px;
+      object-fit: contain;
+      image-rendering: pixelated;
+      filter: drop-shadow(0 3px 6px rgba(0, 0, 0, 0.14));
+      animation: float 3.2s ease-in-out infinite;
+    }
+
+    .deco-sprite:nth-child(2) { animation-delay: 0.35s; }
+    .deco-sprite:nth-child(3) { animation-delay: 0.70s; }
+    .deco-sprite:nth-child(4) { animation-delay: 1.05s; }
+    .deco-sprite:nth-child(5) { animation-delay: 1.40s; }
+    .deco-sprite:nth-child(6) { animation-delay: 1.75s; }
+    .deco-sprite:nth-child(7) { animation-delay: 2.10s; }
+    .deco-sprite:nth-child(8) { animation-delay: 2.45s; }
+    .deco-sprite:nth-child(9) { animation-delay: 2.80s; }
+
+    /* ── Pokémon Day info badges ──────────────────────── */
+    .pokemon-day-info {
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
+      margin-top: 10px;
+      position: relative;
+      z-index: 1;
+    }
+
+    .type-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+      padding: 5px 11px;
+      border-radius: 999px;
+      font-size: 0.8rem;
+      font-weight: 600;
+      letter-spacing: 0.02em;
+    }
+
+    .type-badge.fire    { background: rgba(238, 71, 111, 0.13); color: #be3455; border: 1px solid rgba(238, 71, 111, 0.25); }
+    .type-badge.electric{ background: rgba(255, 209, 102, 0.30); color: #8a6a00; border: 1px solid rgba(255, 209, 102, 0.55); }
+    .type-badge.grass   { background: rgba(6, 214, 160, 0.14);   color: #047857; border: 1px solid rgba(6, 214, 160, 0.30); }
+    .type-badge.psychic { background: rgba(139, 92, 246, 0.12);  color: #6d28d9; border: 1px solid rgba(139, 92, 246, 0.28); }
+
+    /* ── Extra keyframes ──────────────────────────────── */
+    @keyframes float {
+      0%%,  100%% { transform: translateY(0); }
+      50%%         { transform: translateY(-6px); }
+    }
+
+    @keyframes shimmer {
+      0%%   { background-position: 0%%   0%%; }
+      50%%  { background-position: 100%% 0%%; }
+      100%% { background-position: 0%%   0%%; }
+    }
   </style>
 </head>
 <body>
+  <header class="anniv-bar" role="banner">
+    <div class="anniv-bar-inner">
+      <span class="anniv-emoji">🎉</span>
+      <span>¡Celebrando <strong>25 Años de Pokémon</strong> &nbsp;·&nbsp; Día de Pokémon: 27 de Febrero &nbsp;·&nbsp; 1996 → 2021</span>
+      <span class="anniv-emoji">🎉</span>
+    </div>
+  </header>
   <main class="page">
     <section class="hero">
       <div class="hero-top">
         <div>
-          <span class="badge">Campeonato automático</span>
+          <span class="badge">🏆 Campeonato automático · 25° Aniversario</span>
           <h1>Pokedex arena en vivo</h1>
-          <p>La página arranca con una batalla aleatoria, aplica efectos visuales, elige un ganador por rondas y continúa hasta coronar un campeón. Debajo se mantiene la galería completa en cards.</p>
+          <p>Celebrando 25 años de Pokémon: la página arranca con una batalla aleatoria entre los 151 Pokémon originales de Kanto, elige un ganador por rondas y continúa hasta coronar un campeón.</p>
         </div>
         <div class="hero-stats">
           <div class="stat-chip"><span>Formato</span><strong id="tournamentFormat">Cargando...</strong></div>
           <div class="stat-chip"><span>Batalla actual</span><strong id="battleNumber">--</strong></div>
           <div class="stat-chip"><span>Campeón</span><strong id="championName">Pendiente</strong></div>
         </div>
+      </div>
+      <div class="pokemon-day-info">
+        <span class="type-badge fire">🔥 Día de Pokémon · 27 Feb</span>
+        <span class="type-badge electric">⚡ 25 Años · 1996–2021</span>
+        <span class="type-badge grass">🌿 Generación I · Kanto</span>
+        <span class="type-badge psychic">🔮 151 Pokémon originales</span>
+      </div>
+      <div class="deco-row" aria-hidden="true">
+        <img class="deco-sprite" src="https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/25.png"  alt="Pikachu"   title="Pikachu"   loading="lazy" />
+        <img class="deco-sprite" src="https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/1.png"   alt="Bulbasaur" title="Bulbasaur" loading="lazy" />
+        <img class="deco-sprite" src="https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/4.png"   alt="Charmander" title="Charmander" loading="lazy" />
+        <img class="deco-sprite" src="https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/7.png"   alt="Squirtle"  title="Squirtle"  loading="lazy" />
+        <img class="deco-sprite" src="https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/150.png" alt="Mewtwo"    title="Mewtwo"    loading="lazy" />
+        <img class="deco-sprite" src="https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/133.png" alt="Eevee"     title="Eevee"     loading="lazy" />
+        <img class="deco-sprite" src="https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/143.png" alt="Snorlax"   title="Snorlax"   loading="lazy" />
+        <img class="deco-sprite" src="https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/94.png"  alt="Gengar"    title="Gengar"    loading="lazy" />
+        <img class="deco-sprite" src="https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/151.png" alt="Mew"       title="Mew"       loading="lazy" />
       </div>
       <div class="toolbar">
         <input id="search" type="search" placeholder="Filtrar por nombre" aria-label="Filtrar por nombre" />
