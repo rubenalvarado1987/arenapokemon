@@ -344,6 +344,7 @@ const frontendHTML = `<!DOCTYPE html>
     .versus {
       display: grid;
       place-items: center;
+      gap: 10px;
       min-width: 72px;
       color: #fff;
       font-weight: 700;
@@ -359,6 +360,32 @@ const frontendHTML = `<!DOCTYPE html>
       display: grid;
       place-items: center;
       box-shadow: 0 18px 30px rgba(190, 52, 85, 0.3);
+    }
+
+    .power-display {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 4px;
+      padding: 8px 10px;
+      border-radius: 16px;
+      background: rgba(255, 255, 255, 0.18);
+      border: 1px solid rgba(255, 255, 255, 0.28);
+      min-width: 64px;
+    }
+
+    .power-tier-icons {
+      font-size: 1.1rem;
+      line-height: 1;
+      letter-spacing: 2px;
+    }
+
+    .power-value {
+      font-size: 0.72rem;
+      color: rgba(255, 255, 255, 0.82);
+      letter-spacing: 0.04em;
+      font-weight: 400;
+      text-transform: none;
     }
 
     .battle-event {
@@ -623,7 +650,15 @@ const frontendHTML = `<!DOCTYPE html>
           </article>
 
           <div class="versus">
+            <div class="power-display" id="powerDisplayA">
+              <div class="power-tier-icons" id="powerIconsA">⚡</div>
+              <div class="power-value" id="powerValueA">Poder --</div>
+            </div>
             <div class="versus-badge">VS</div>
+            <div class="power-display" id="powerDisplayB">
+              <div class="power-tier-icons" id="powerIconsB">⚡</div>
+              <div class="power-value" id="powerValueB">Poder --</div>
+            </div>
           </div>
 
           <article class="fighter" id="fighterB">
@@ -717,6 +752,10 @@ const frontendHTML = `<!DOCTYPE html>
 
     const fighterAElements = getFighterElements('A');
     const fighterBElements = getFighterElements('B');
+    const powerIconsA = document.getElementById('powerIconsA');
+    const powerIconsB = document.getElementById('powerIconsB');
+    const powerValueA = document.getElementById('powerValueA');
+    const powerValueB = document.getElementById('powerValueB');
 
     function getFighterElements(slot) {
       return {
@@ -880,6 +919,7 @@ const frontendHTML = `<!DOCTYPE html>
 
       renderFighter(fighterAElements, left, 'En guardia');
       renderFighter(fighterBElements, right, 'En guardia');
+      renderPowerIcons(left, right);
 
       const turnLog = [];
       const totalTurns = 4 + Math.floor(Math.random() * 3);
@@ -995,6 +1035,22 @@ const frontendHTML = `<!DOCTYPE html>
       pushBattleLog(champion.name + ' se corona campeon.', 'El cuadro completo se reiniciara cuando quieras.');
       renderRoundHistory();
       logStatus.textContent = 'Campeonato completado.';
+    }
+
+    function getPowerTier(power) {
+      if (power >= 94) { return { icons: '🔥🔥🔥🔥', label: 'Élite' }; }
+      if (power >= 87) { return { icons: '⚡⚡⚡', label: 'Fuerte' }; }
+      if (power >= 80) { return { icons: '💪💪', label: 'Medio' }; }
+      return { icons: '🌀', label: 'Básico' };
+    }
+
+    function renderPowerIcons(left, right) {
+      const tierA = getPowerTier(left.power);
+      const tierB = getPowerTier(right.power);
+      powerIconsA.textContent = tierA.icons;
+      powerValueA.textContent = 'Poder ' + left.power + ' · ' + tierA.label;
+      powerIconsB.textContent = tierB.icons;
+      powerValueB.textContent = 'Poder ' + right.power + ' · ' + tierB.label;
     }
 
     function renderFighter(elements, fighter, stateLabel) {
